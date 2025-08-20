@@ -2,6 +2,7 @@ import Link from "next/link";
 
 type Artikkel = { id: number; tittel: string };
 
+
 async function hentArtikler(): Promise<Artikkel[]> {
   const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
 
