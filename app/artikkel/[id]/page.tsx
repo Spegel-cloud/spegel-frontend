@@ -1,17 +1,11 @@
-import React from "react";
+// app/artikkel/[id]/page.tsx
 
-// Typing av props: params er alltid et objekt, ikke et Promise
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-
-
-
-export default function ArtikkelPage({ params }: PageProps) {
-  const { id } = params;
+export default async function ArtikkelPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  const { id } = await params;
 
   return (
     <main style={{ padding: "2rem" }}>
