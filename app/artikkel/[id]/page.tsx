@@ -7,6 +7,9 @@ type PageProps = {
   };
 };
 
+
+
+
 export default function ArtikkelPage({ params }: PageProps) {
   const { id } = params;
 
