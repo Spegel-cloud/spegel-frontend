@@ -1,7 +1,10 @@
 import Link from "next/link";
 
 async function hentArtikler() {
-  const res = await fetch("http://localhost:1337/api/artikkels", {
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL; 
+  console.log("Strapi backend URL:", apiUrl);
+
+  const res = await fetch(`${apiUrl}/api/artikkels`, {
     cache: "no-store",
   });
 
@@ -21,7 +24,10 @@ export default async function Home() {
 
         return (
           <div key={id} style={{ marginBottom: "1rem" }}>
-            <Link href={`/artikkel/${id}`} style={{ color: "blue", fontSize: "1.2rem" }}>
+            <Link
+              href={`/artikkel/${id}`}
+              style={{ color: "blue", fontSize: "1.2rem" }}
+            >
               {tittel}
             </Link>
           </div>
