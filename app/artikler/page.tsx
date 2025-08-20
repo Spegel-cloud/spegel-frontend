@@ -1,12 +1,26 @@
-import ReactMarkdown from "react-markdown";
+import Link from "next/link";
 
-async function hentArtikler() {
-  const res = await fetch("http://localhost:1337/api/artikkels", {
-    cache: "no-store",
-  });
+type Artikkel = { id: number; tittel: string };
 
-  const data = await res.json();
-  return data.data;
+async function hentArtikler(): Promise<Artikkel[]> {
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL;
+  console.log("[spegel] NEXT_PUBLIC_STRAPI_URL =", apiUrl);
+
+  if (!apiUrl) return [];
+
+  try {
+    const res = await fetch(`${apiUrl}/api/artikkels`, { cache: "no-store" });
+    if (!res.ok) {
+      const body = await res.text().catch(() => "");
+      console.error("[spegel] /artikler fetch feilet:", res.status, body);
+      return [];
+    }
+    const json = await res.json();
+    return json?.data ?? [];
+  } catch (e) {
+    console.error("[spegel] /artikler uventet feil:", e);
+    return [];
+  }
 }
 
 export default async function ArtiklerPage() {
@@ -14,19 +28,19 @@ export default async function ArtiklerPage() {
 
   return (
     <main style={{ padding: "20px", fontFamily: "sans-serif" }}>
-      <h1>Alle artiklene:</h1>
-
-      {artikler.map((artikkel: any) => {
-        const { id, tittel, innhold } = artikkel;
-
-        return (
-          <div key={id} style={{ marginBottom: "2rem" }}>
-            <h2 style={{ fontSize: "1.5rem" }}>{tittel}</h2>
-            <ReactMarkdown>{innhold}</ReactMarkdown>
-            <hr style={{ marginTop: "1rem" }} />
-          </div>
-        );
-      })}
+      <h1>Artikler</h1>
+      {artikler.length === 0 && (
+        <p style={{ opacity: 0.7 }}>
+          Ingen artikler å vise. (Sjekk backend/ENV.)
+        </p>
+      )}
+      {artikler.map((a: any) => (
+        <div key={a.id} style={{ marginBottom: "1rem" }}>
+          <Link href={`/artikkel/${a.id}`} style={{ color: "blue" }}>
+            {a.tittel}
+          </Link>
+        </div>
+      ))}
     </main>
   );
 }

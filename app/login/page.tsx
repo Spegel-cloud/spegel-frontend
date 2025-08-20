@@ -12,8 +12,8 @@ export default function LoginPage() {
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setFeil('');
-
-    const res = await fetch('http://localhost:1337/api/auth/local', {
+    const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL!; 
+    const res = await fetch(`${apiUrl}/api/artikkels`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ identifier: email, password: passord }),

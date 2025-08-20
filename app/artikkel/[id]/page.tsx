@@ -1,18 +1,11 @@
-// app/artikkel/[id]/page.tsx
-
 export default async function ArtikkelPage({
   params,
-}: {
-  params: Promise<{ id: string }>;
-}) {
+}: { params: Promise<{ id: string }> }) {
   const { id } = await params;
+  const apiUrl = process.env.NEXT_PUBLIC_STRAPI_URL!;
+  const res = await fetch(`${apiUrl}/api/artikkels/${id}`, { cache: "no-store" });
+  const json = res.ok ? await res.json() : null;
 
-  return (
-    <main style={{ padding: "2rem" }}>
-      <h1>Artikkel {id}</h1>
-      <p>
-        Dette er en dynamisk side for artikkel med ID: <strong>{id}</strong>.
-      </p>
-    </main>
-  );
+  // …render json?.data
+  return <main style={{ padding: "2rem" }}>Artikkel {id}</main>;
 }
